@@ -7,3 +7,4 @@ langchain-openai
 langchain-experimental
 python-dotenv
 tabulate
+langchain-google-genai

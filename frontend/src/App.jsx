@@ -40,7 +40,7 @@ function App() {
   return (
     <div className="chat-container">
       <header className="chat-header">
-        <h1>📊 Analytics AI Copilot</h1>
+        <h1>📊 Analytics AI Chatbot</h1>
         <div className="status-indicator">
           <span className="dot"></span> Base Sincronizada
         </div>
@@ -50,7 +50,7 @@ function App() {
         {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.role}`}>
             <div className="bubble">
-              {msg.content}
+              {typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content)}
             </div>
           </div>
         ))}
