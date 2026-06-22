@@ -1,33 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Olá! Sou seu assistente de Adobe Analytics. Faça o upload do CSV diário e me pergunte sobre as campanhas.' }
+    { role: 'assistant', content: 'Olá! A base de dados do Adobe Analytics já foi sincronizada. O que você gostaria de saber sobre as campanhas de hoje?' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fileStatus, setFileStatus] = useState('Nenhum arquivo carregado');
-
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      setFileStatus('Carregando...');
-      const response = await fetch('http://localhost:8000/upload-csv', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      setFileStatus(data.status === 'success' ? '✅ CSV Carregado!' : '❌ Erro no upload');
-    } catch (error) {
-      setFileStatus('❌ Falha na conexão com o servidor');
-    }
-  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -45,14 +24,14 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           message: userMessage.content,
-          history: messages // Passando o histórico para manter o contexto
+          history: messages 
         }),
       });
       
       const data = await response.json();
       setMessages([...newHistory, { role: 'assistant', content: data.reply }]);
     } catch (error) {
-      setMessages([...newHistory, { role: 'assistant', content: '⚠️ Erro ao conectar com o servidor.' }]);
+      setMessages([...newHistory, { role: 'assistant', content: '⚠️ Erro de conexão com o Data Lake local.' }]);
     } finally {
       setLoading(false);
     }
@@ -62,9 +41,8 @@ function App() {
     <div className="chat-container">
       <header className="chat-header">
         <h1>📊 Analytics AI Copilot</h1>
-        <div className="upload-section">
-          <input type="file" accept=".csv" onChange={handleFileUpload} id="file-upload"/>
-          <span className="file-status">{fileStatus}</span>
+        <div className="status-indicator">
+          <span className="dot"></span> Base Sincronizada
         </div>
       </header>
 
@@ -76,7 +54,7 @@ function App() {
             </div>
           </div>
         ))}
-        {loading && <div className="message assistant"><div className="bubble">Pensando...</div></div>}
+        {loading && <div className="message assistant"><div className="bubble">Consultando o Data Lake...</div></div>}
       </div>
 
       <form onSubmit={handleSendMessage} className="input-area">
@@ -84,9 +62,10 @@ function App() {
           type="text" 
           value={input} 
           onChange={(e) => setInput(e.target.value)} 
-          placeholder="Ex: Qual foi a taxa de conversão da feature RENDAMAIS?"
+          placeholder="Ex: Qual campanha de R$ 9.99 teve mais acessos?"
+          disabled={loading}
         />
-        <button type="submit" disabled={loading}>Enviar</button>
+        <button type="submit" disabled={loading}>Analisar</button>
       </form>
     </div>
   );

@@ -14,3 +14,5 @@ body { font-family: -apple-system, sans-serif; background-color: #f0f2f5; margin
 .input-area input { flex: 1; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; }
 .input-area button { padding: 12px 24px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 .input-area button:disabled { background: #9ca3af; }
+.status-indicator { font-size: 0.85rem; color: #10b981; display: flex; align-items: center; gap: 6px; font-weight: 500;}
+.dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 5px #10b981;}

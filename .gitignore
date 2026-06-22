@@ -7,6 +7,9 @@ venv/
 
 # Cache do Python (arquivos compilados)
 __pycache__/
+node_modules/
 *.pyc
 *.pyo
 *.pyd
+
+dados/
