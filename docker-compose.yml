@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Isso espelha a sua pasta local para dentro do Docker! 
+      # Se você alterar o main.py no seu PC, o Uvicorn no Docker percebe e recarrega.
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      # Espelha o código do frontend
+      - ./frontend:/app
+      # Protege a pasta node_modules interna do contêiner para não conflitar com a sua local
+      - /app/node_modules
+    environment:
+      # Força o Vite a assistir as mudanças de arquivo mesmo rodando dentro do Windows/WSL/Docker
+      - CHOKIDAR_USEPOLLING=true
